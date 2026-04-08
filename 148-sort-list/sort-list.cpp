@@ -10,80 +10,51 @@
  */
 class Solution {
 public:
+   ListNode * merge(ListNode*l1,ListNode*l2){
+        ListNode dummy(0);
+        ListNode* tail = &dummy;
+           while (l1 && l2) {
+                if (l1->val < l2->val) {
+                    tail->next = l1;
+                    l1 = l1->next;
+                } else {
+                    tail->next = l2;
+                    l2 = l2->next;
+                }
+                tail = tail->next;
+            }
 
-    void merge(vector<int>& arr, int st, int mid, int end)
-    {
-        int i = st;
-        int j = mid + 1;
-        int k = 0;
-
-        int size = end - st + 1;
-        vector<int> temp(size);
-
-        while (i <= mid && j <= end)
-        {
-            if (arr[i] < arr[j])
-                temp[k++] = arr[i++];
-            else
-                temp[k++] = arr[j++];
-        }
-
-        while (i <= mid)
-            temp[k++] = arr[i++];
-
-        while (j <= end)
-            temp[k++] = arr[j++];
-
-        for (int i = 0; i < size; i++)
-            arr[st + i] = temp[i];
+        tail->next = (l1) ? l1 : l2;
+        return dummy.next;
     }
 
-    void merge_sort(vector<int>& arr, int st, int end)
-    {
-        if (st < end)
-        {
-            int mid = st + (end - st) / 2;
-            merge_sort(arr, st, mid);
-            merge_sort(arr, mid + 1, end);
-            merge(arr, st, mid, end);
-        }
-    }
 
-    ListNode* sortList(ListNode* head)
-    {
-        if (!head || !head->next)
+   
+
+   ListNode* middleNode(ListNode* head) {
+    ListNode* slow = head;
+    ListNode* fast = head->next;
+
+    while (fast && fast->next) {
+        slow = slow->next;
+        fast = fast->next->next;
+    }
+    return slow;
+    }
+    
+    ListNode * sortList(ListNode*head){
+        if(!head || !head->next){
             return head;
-
-        int n = 0;
-        ListNode* temp = head;
-        while (temp)
-        {
-            n++;
-            temp = temp->next;
         }
 
-        vector<int> arr(n);
-        temp = head;
-        int i = 0;
+        ListNode* mid = middleNode(head);
+        ListNode * right = mid->next;
+        mid->next = NULL;
 
-        while (temp)
-        {
-            arr[i++] = temp->val;
-            temp = temp->next;
-        }
-
-     
-        merge_sort(arr, 0, n - 1);
-
-        temp = head;
-        i = 0;
-
-        while (temp)
-        {
-            temp->val = arr[i++];
-            temp = temp->next;
-        }
-
-        return head;
+        ListNode * left = sortList(head);
+        right =  sortList(right);
+        return merge(left, right);
+    
+    
     }
 };
