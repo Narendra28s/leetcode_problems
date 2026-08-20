@@ -2,24 +2,29 @@ class Solution {
 public:
     string removeDuplicates(string s, int k) {
   
-        int i  = 1 ;
-        int count = 1 ;
-        while(i < s.length()){
-                if(s[i-1] == s[i]){
-                    count++;
-                }else{
-                    count = 1 ;
-                }    
-                if(count == k){
-                    s.erase(i-k+1 , k );
-                    i = 1;
-                    count = 1 ; 
-                }
-                else{
-                    i++;
-                }
+           vector<pair<char,int>>st;
+
+        for(auto c : s){
+            if(st.size() == 0  || st.back().first != c){
+                st.push_back({c,1});
+            }else{
+                st.back().second++;
+            }
+
+            if(st.back().second == k ){
+                st.pop_back();
+            }
         }
-        return s;
-        
+
+        string res ; 
+        for(auto x : st){
+            res.append(x.second , x.first);
+        }
+
+        return res ;
+
+
     }
+        
+    
 };
